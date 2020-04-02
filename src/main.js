@@ -364,3 +364,12 @@ const createLoadMoreButtonTemplate = () => {
     `<button class="load-more" type="button">load more</button>`
   );
 };
+
+const render = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
+
+const siteMainElement = document.querySelector(`.main`);
+const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
+
+render(siteHeaderElement, createSiteMenuTemplate(), `beforeend`);
