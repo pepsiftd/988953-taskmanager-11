@@ -99,13 +99,15 @@ const createFiltersTemplate = () => {
 
 const createBoardTemplate = () => {
   return (
-    `<div class="board__filter-list">
-      <a href="#" class="board__filter" data-sort-type="default">SORT BY DEFAULT</a>
-      <a href="#" class="board__filter" data-sort-type="date-up">SORT BY DATE up</a>
-      <a href="#" class="board__filter" data-sort-type="date-down">SORT BY DATE down</a>
-    </div>
+    `<section class="board container">
+      <div class="board__filter-list">
+        <a href="#" class="board__filter" data-sort-type="default">SORT BY DEFAULT</a>
+        <a href="#" class="board__filter" data-sort-type="date-up">SORT BY DATE up</a>
+        <a href="#" class="board__filter" data-sort-type="date-down">SORT BY DATE down</a>
+      </div>
 
-    <div class="board__tasks">`
+      <div class="board__tasks">
+    </section>`
   );
 };
 
@@ -373,3 +375,14 @@ const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
 render(siteHeaderElement, createSiteMenuTemplate(), `beforeend`);
+render(siteHeaderElement, createFiltersTemplate(), 'afterend');
+render(siteMainElement, createBoardTemplate(), 'beforeend');
+
+const boardElement = siteMainElement.querySelector('.board');
+const tasksContainerElement = boardElement.querySelector('.board__tasks');
+
+render(tasksContainerElement, createTaskEditTemplate(), 'afterbegin');
+render(tasksContainerElement, createTaskTemplate(), 'beforeend');
+render(tasksContainerElement, createTaskTemplate(), 'beforeend');
+
+render(boardElement, createLoadMoreButtonTemplate(), 'beforeend');
