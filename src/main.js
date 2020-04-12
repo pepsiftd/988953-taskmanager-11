@@ -4,6 +4,7 @@ import {createBoardTemplate} from "./components/board.js";
 import {createTaskTemplate} from "./components/task.js";
 import {createTaskEditTemplate} from "./components/task-edit.js";
 import {createLoadMoreButtonTemplate} from "./components/load-more-button.js";
+import {generateFilters} from "./components/mock/filters.js";
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -13,7 +14,9 @@ const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
 render(siteHeaderElement, createSiteMenuTemplate(), `beforeend`);
-render(siteHeaderElement, createFiltersTemplate(), `afterend`);
+
+const filters = generateFilters();
+render(siteHeaderElement, createFiltersTemplate(filters), `afterend`);
 render(siteMainElement, createBoardTemplate(), `beforeend`);
 
 const boardElement = siteMainElement.querySelector(`.board`);
