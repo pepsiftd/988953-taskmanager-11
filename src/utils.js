@@ -1,5 +1,5 @@
 const castTimeFormat = (value) => {
-  return value < 10 ? `0${value}` : String(value);
+  return `0${value}`.slice(-2);
 };
 
 export const formatTime = (date) => {
