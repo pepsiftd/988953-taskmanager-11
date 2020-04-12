@@ -1,4 +1,4 @@
-import {MONTH_NAMES, DAYS} from "@/const.js";
+import {MONTH_NAMES} from "@/const.js";
 import {formatTime} from "@/utils.js";
 
 export const createTaskTemplate = (task) => {
