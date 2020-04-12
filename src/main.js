@@ -5,6 +5,9 @@ import {createTaskTemplate} from "./components/task.js";
 import {createTaskEditTemplate} from "./components/task-edit.js";
 import {createLoadMoreButtonTemplate} from "./components/load-more-button.js";
 import {generateFilters} from "./components/mock/filters.js";
+import {generateTasks} from "./components/mock/tasks.js";
+
+const TASK_COUNT = 3;
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -22,9 +25,12 @@ render(siteMainElement, createBoardTemplate(), `beforeend`);
 const boardElement = siteMainElement.querySelector(`.board`);
 const tasksContainerElement = boardElement.querySelector(`.board__tasks`);
 
-render(tasksContainerElement, createTaskEditTemplate(), `afterbegin`);
-render(tasksContainerElement, createTaskTemplate(), `beforeend`);
-render(tasksContainerElement, createTaskTemplate(), `beforeend`);
-render(tasksContainerElement, createTaskTemplate(), `beforeend`);
+const tasks = generateTasks(TASK_COUNT);
+
+render(tasksContainerElement, createTaskEditTemplate(tasks[0]), `afterbegin`);
+
+for (let i = 1; i < tasks.length; i++) {
+  render(tasksContainerElement, createTaskTemplate(tasks[i]), `beforeend`);
+}
 
 render(boardElement, createLoadMoreButtonTemplate(), `beforeend`);
