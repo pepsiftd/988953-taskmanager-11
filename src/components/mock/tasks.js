@@ -8,11 +8,11 @@ const DescriptionItems = [
 ];
 
 const DefaultRepeatingDays = {
-  "mo": false,
+  "mo": true,
   "tu": false,
-  "we": false,
+  "we": true,
   "th": false,
-  "fr": false,
+  "fr": true,
   "sa": false,
   "su": false,
 };
