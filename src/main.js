@@ -36,9 +36,29 @@ const tasks = generateTasks(TASK_COUNT);
 
 let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
 
+const renderTask = (taskListElement, task) => {
+  const editButtonClickHandler = () => {
+    taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
+  };
+
+  const editFormSubmitHandler = () => {
+    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
+  };
+
+  const taskComponent = new TaskComponent(task);
+  const editButton = taskComponent.getElement().querySelector(`.card__btn--edit`);
+  editButton.addEventListener(`click`, editButtonClickHandler);
+
+  const taskEditComponent = new TaskEditComponent(task);
+  const editForm = taskEditComponent.getElement().querySelector(`form`);
+  editForm.addEventListener(`submit`, editFormSubmitHandler);
+
+  render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
+};
+
 //  задачи
 tasks.slice(0, showingTasksCount)
-  .forEach((task) => render(tasksContainerElement, new TaskComponent(task).getElement(), RenderPosition.BEFOREEND));
+  .forEach((task) => renderTask(tasksContainerElement, task));
 
 //  кнопка Load More
 const loadMoreButton = new LoadMoreComponent().getElement();
@@ -50,7 +70,7 @@ loadMoreButton.addEventListener(`click`, () => {
   showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
 
   tasks.slice(prevTasksCount, showingTasksCount)
-    .forEach((task) => render(tasksContainerElement, new TaskComponent(task).getElement(), RenderPosition.BEFOREEND));
+    .forEach((task) => renderTask(tasksContainerElement, task));
 
   if (showingTasksCount >= tasks.length) {
     loadMoreButton.remove();
