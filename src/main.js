@@ -1,9 +1,10 @@
-import {createSiteMenuTemplate} from "@/components/site-menu.js";
-import {createFiltersTemplate} from "@/components/filters.js";
-import {createBoardTemplate} from "@/components/board.js";
-import {createTaskTemplate} from "@/components/task.js";
-import {createTaskEditTemplate} from "@/components/task-edit.js";
-import {createLoadMoreButtonTemplate} from "@/components/load-more-button.js";
+import SiteMenuComponent from "@/components/site-menu.js";
+import FiltersComponent from "@/components/filters.js";
+import BoardComponent from "@/components/board.js";
+import TaskComponent from "@/components/task.js";
+import TaskEditComponent from "@/components/task-edit.js";
+import LoadMoreComponent from "@/components/load-more-button.js";
+import SortComponent from "@/components/sorting.js";
 import {generateFilters} from "@/components/mock/filters.js";
 import {generateTasks} from "@/components/mock/tasks.js";
 import {render, RenderPosition} from "@/utils.js";
