@@ -6,14 +6,11 @@ import {createTaskEditTemplate} from "@/components/task-edit.js";
 import {createLoadMoreButtonTemplate} from "@/components/load-more-button.js";
 import {generateFilters} from "@/components/mock/filters.js";
 import {generateTasks} from "@/components/mock/tasks.js";
+import {render, RenderPosition} from "@/utils.js";
 
 const TASK_COUNT = 22;
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
 
 // шапка
 //   главное меню
