@@ -82,6 +82,3 @@ render(siteMainElement, boardElement, RenderPosition.BEFOREEND);
 const tasks = generateTasks(TASK_COUNT);
 
 renderBoard(boardElement, tasks);
-
-
-
