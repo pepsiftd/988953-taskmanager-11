@@ -1,4 +1,4 @@
-import {createElement} from "@/util.js";
+import {createElement} from "@/utils.js";
 
 const createBoardTemplate = () => {
   return (

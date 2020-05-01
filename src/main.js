@@ -3,6 +3,7 @@ import FiltersComponent from "@/components/filters.js";
 import BoardComponent from "@/components/board.js";
 import TaskComponent from "@/components/task.js";
 import TaskEditComponent from "@/components/task-edit.js";
+import TasksComponent from "@/components/tasks.js";
 import LoadMoreComponent from "@/components/load-more-button.js";
 import SortComponent from "@/components/sorting.js";
 import {generateFilters} from "@/components/mock/filters.js";
@@ -18,32 +19,30 @@ const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-render(siteHeaderElement, createSiteMenuTemplate(), `beforeend`);
+render(siteHeaderElement, new SiteMenuComponent().getElement(), RenderPosition.BEFOREEND);
 
 //  фильтры
 const filters = generateFilters();
-render(siteHeaderElement, createFiltersTemplate(filters), `afterend`);
-render(siteMainElement, createBoardTemplate(), `beforeend`);
+render(siteMainElement, new FiltersComponent(filters).getElement(), RenderPosition.BEFOREEND);
 
 // доска задач
-const boardElement = siteMainElement.querySelector(`.board`);
-const tasksContainerElement = boardElement.querySelector(`.board__tasks`);
+const boardElement = new BoardComponent().getElement();
+render(siteMainElement, boardElement, RenderPosition.BEFOREEND);
+
+const tasksContainerElement = new TasksComponent().getElement();
+render(boardElement, tasksContainerElement, RenderPosition.BEFOREEND);
 
 const tasks = generateTasks(TASK_COUNT);
 
-//  форма редактирования задачи
-render(tasksContainerElement, createTaskEditTemplate(tasks[0]), `afterbegin`);
-
 let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
 
-//  остальные задачи
-tasks.slice(1, showingTasksCount)
-  .forEach((task) => render(tasksContainerElement, createTaskTemplate(task), `beforeend`));
+//  задачи
+tasks.slice(0, showingTasksCount)
+  .forEach((task) => render(tasksContainerElement, new TaskComponent(task).getElement(), RenderPosition.BEFOREEND));
 
 //  кнопка Load More
-render(boardElement, createLoadMoreButtonTemplate(), `beforeend`);
-
-const loadMoreButton = boardElement.querySelector(`.load-more`);
+const loadMoreButton = new LoadMoreComponent().getElement();
+render(boardElement, loadMoreButton, RenderPosition.BEFOREEND);
 
 //     нажатие на кнопку Load More
 loadMoreButton.addEventListener(`click`, () => {
@@ -51,7 +50,7 @@ loadMoreButton.addEventListener(`click`, () => {
   showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
 
   tasks.slice(prevTasksCount, showingTasksCount)
-    .forEach((task) => render(tasksContainerElement, createTaskTemplate(task), `beforeend`));
+    .forEach((task) => render(tasksContainerElement, new TaskComponent(task).getElement(), RenderPosition.BEFOREEND));
 
   if (showingTasksCount >= tasks.length) {
     loadMoreButton.remove();
