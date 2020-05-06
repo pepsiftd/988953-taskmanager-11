@@ -24,6 +24,7 @@ export default class Tasks {
   }
 
   removeElement() {
+    this._element.remove();
     this._element = null;
   }
 }

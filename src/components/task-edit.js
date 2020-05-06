@@ -146,6 +146,7 @@ export default class TaskEdit {
   }
 
   removeElement() {
+    this._element.remove();
     this._element = null;
   }
 }

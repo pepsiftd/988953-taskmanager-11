@@ -48,6 +48,7 @@ export default class Filters {
   }
 
   removeElement() {
+    this._element.remove();
     this._element = null;
   }
 }

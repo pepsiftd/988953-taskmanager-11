@@ -82,6 +82,7 @@ export default class Task {
   }
 
   removeElement() {
+    this._element.remove();
     this._element = null;
   }
 }
