@@ -6,6 +6,7 @@ import TaskEditComponent from "@/components/task-edit.js";
 import TasksComponent from "@/components/tasks.js";
 import LoadMoreComponent from "@/components/load-more-button.js";
 import SortComponent from "@/components/sorting.js";
+import NoTasksComponent from "@/components/no-tasks.js";
 import {generateFilters} from "@/components/mock/filters.js";
 import {generateTasks} from "@/components/mock/tasks.js";
 import {render, RenderPosition} from "@/utils.js";
@@ -52,6 +53,14 @@ const renderTask = (taskListElement, task) => {
 };
 
 const renderBoard = (boardComponent, tasks) => {
+  const notArchiveTasksAmount = tasks.filter((it) => !it.isArchive).length;
+  const isNoTasks = notArchiveTasksAmount < 1;
+
+  if (isNoTasks) {
+    render(boardElement, new NoTasksComponent().getElement(), RenderPosition.BEFOREEND);
+    return;
+  }
+
   render(boardElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
   const tasksContainerElement = new TasksComponent().getElement();
   render(boardElement, tasksContainerElement, RenderPosition.BEFOREEND);
