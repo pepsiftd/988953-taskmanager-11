@@ -13,14 +13,31 @@ import {render, RenderPosition} from "@/utils.js";
 const TASK_COUNT = 22;
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
+const ESC_KEY = `Escape`;
 
 const renderTask = (taskListElement, task) => {
-  const editButtonClickHandler = () => {
+  const replaceTaskWithEdit = () => {
     taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
+    document.addEventListener(`keydown`, escPressHandler);
+  };
+
+  const replaceEditWithTask = () => {
+    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
+    document.removeEventListener(`keydown`, escPressHandler);
+  };
+
+  const escPressHandler = (evt) => {
+    if (evt.key === ESC_KEY) {
+      replaceEditWithTask();
+    }
+  };
+
+  const editButtonClickHandler = () => {
+    replaceTaskWithEdit();
   };
 
   const editFormSubmitHandler = () => {
-    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
+    replaceEditWithTask();
   };
 
   const taskComponent = new TaskComponent(task);
