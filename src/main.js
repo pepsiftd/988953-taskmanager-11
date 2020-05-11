@@ -31,23 +31,23 @@ const renderTask = (taskListElement, task) => {
   const editForm = taskEditComponent.getElement().querySelector(`form`);
   editForm.addEventListener(`submit`, editFormSubmitHandler);
 
-  render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
+  render(taskListElement, taskComponent, RenderPosition.BEFOREEND);
 };
 
 const renderBoard = (boardComponent, tasks) => {
-  render(boardElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
-  const tasksContainerElement = new TasksComponent().getElement();
-  render(boardElement, tasksContainerElement, RenderPosition.BEFOREEND);
+  render(boardComponent.getElement(), new SortComponent(), RenderPosition.BEFOREEND);
+  const tasksContainerComponent = new TasksComponent();
+  render(boardComponent.getElement(), tasksContainerComponent, RenderPosition.BEFOREEND);
 
   let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
 
   //  задачи
   tasks.slice(0, showingTasksCount)
-    .forEach((task) => renderTask(tasksContainerElement, task));
+    .forEach((task) => renderTask(tasksContainerComponent.getElement(), task));
 
   //  кнопка Load More
   const loadMoreButtonComponent = new LoadMoreComponent();
-  render(boardElement, loadMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+  render(boardComponent.getElement(), loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
   //     нажатие на кнопку Load More
   loadMoreButtonComponent.getElement().addEventListener(`click`, () => {
@@ -55,7 +55,7 @@ const renderBoard = (boardComponent, tasks) => {
     showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
 
     tasks.slice(prevTasksCount, showingTasksCount)
-      .forEach((task) => renderTask(tasksContainerElement, task));
+      .forEach((task) => renderTask(tasksContainerComponent.getElement(), task));
 
     if (showingTasksCount >= tasks.length) {
       loadMoreButtonComponent.getElement().remove();
@@ -69,16 +69,16 @@ const renderBoard = (boardComponent, tasks) => {
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-render(siteHeaderElement, new SiteMenuComponent().getElement(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, new SiteMenuComponent(), RenderPosition.BEFOREEND);
 
 //   фильтры
 const filters = generateFilters();
-render(siteMainElement, new FiltersComponent(filters).getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, new FiltersComponent(filters), RenderPosition.BEFOREEND);
 
 // доска задач
-const boardElement = new BoardComponent().getElement();
-render(siteMainElement, boardElement, RenderPosition.BEFOREEND);
+const boardComponent = new BoardComponent();
+render(siteMainElement, boardComponent, RenderPosition.BEFOREEND);
 
 const tasks = generateTasks(TASK_COUNT);
 
-renderBoard(boardElement, tasks);
+renderBoard(boardComponent, tasks);
