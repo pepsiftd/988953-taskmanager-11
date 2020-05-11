@@ -24,12 +24,10 @@ const renderTask = (taskListElement, task) => {
   };
 
   const taskComponent = new TaskComponent(task);
-  const editButton = taskComponent.getElement().querySelector(`.card__btn--edit`);
-  editButton.addEventListener(`click`, editButtonClickHandler);
+  taskComponent.setEditButtonClickHandler(editButtonClickHandler);
 
   const taskEditComponent = new TaskEditComponent(task);
-  const editForm = taskEditComponent.getElement().querySelector(`form`);
-  editForm.addEventListener(`submit`, editFormSubmitHandler);
+  taskEditComponent.setSubmitHandler(editFormSubmitHandler);
 
   render(taskListElement, taskComponent, RenderPosition.BEFOREEND);
 };
@@ -50,7 +48,7 @@ const renderBoard = (boardComponent, tasks) => {
   render(boardComponent.getElement(), loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
   //     нажатие на кнопку Load More
-  loadMoreButtonComponent.getElement().addEventListener(`click`, () => {
+  loadMoreButtonComponent.setClickHandler(() => {
     const prevTasksCount = showingTasksCount;
     showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
 
@@ -58,7 +56,6 @@ const renderBoard = (boardComponent, tasks) => {
       .forEach((task) => renderTask(tasksContainerComponent.getElement(), task));
 
     if (showingTasksCount >= tasks.length) {
-      loadMoreButtonComponent.getElement().remove();
       loadMoreButtonComponent.removeElement();
     }
   });
