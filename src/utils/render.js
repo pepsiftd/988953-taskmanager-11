@@ -21,3 +21,7 @@ export const render = (container, element, place) => {
       break;
   }
 };
+
+export const replace = (container, newElement, oldElement) => {
+  container.replaceChild(newElement, oldElement);
+};

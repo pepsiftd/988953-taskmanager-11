@@ -8,7 +8,7 @@ import LoadMoreComponent from "@/components/load-more-button.js";
 import SortComponent from "@/components/sorting.js";
 import {generateFilters} from "@/components/mock/filters.js";
 import {generateTasks} from "@/components/mock/tasks.js";
-import {render, RenderPosition} from "@/utils/render.js";
+import {render, replace, RenderPosition} from "@/utils/render.js";
 
 const TASK_COUNT = 22;
 const SHOWING_TASKS_COUNT_ON_START = 8;
@@ -16,11 +16,11 @@ const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 
 const renderTask = (taskListElement, task) => {
   const editButtonClickHandler = () => {
-    taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
+    replace(taskListElement, taskEditComponent.getElement(), taskComponent.getElement());
   };
 
   const editFormSubmitHandler = () => {
-    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
+    replace(taskListElement, taskComponent.getElement(), taskEditComponent.getElement());
   };
 
   const taskComponent = new TaskComponent(task);
