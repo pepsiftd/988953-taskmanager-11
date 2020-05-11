@@ -26,35 +26,6 @@ const renderTask = (taskListElement, task) => {
   render(taskListElement, taskComponent, RenderPosition.BEFOREEND);
 };
 
-const renderBoard = (boardComponent, tasks) => {
-  render(boardComponent.getElement(), new SortComponent(), RenderPosition.BEFOREEND);
-  const tasksContainerComponent = new TasksComponent();
-  render(boardComponent.getElement(), tasksContainerComponent, RenderPosition.BEFOREEND);
-
-  let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
-
-  //  задачи
-  tasks.slice(0, showingTasksCount)
-    .forEach((task) => renderTask(tasksContainerComponent.getElement(), task));
-
-  //  кнопка Load More
-  const loadMoreButtonComponent = new LoadMoreComponent();
-  render(boardComponent.getElement(), loadMoreButtonComponent, RenderPosition.BEFOREEND);
-
-  //     нажатие на кнопку Load More
-  loadMoreButtonComponent.setClickHandler(() => {
-    const prevTasksCount = showingTasksCount;
-    showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
-
-    tasks.slice(prevTasksCount, showingTasksCount)
-      .forEach((task) => renderTask(tasksContainerComponent.getElement(), task));
-
-    if (showingTasksCount >= tasks.length) {
-      loadMoreButtonComponent.removeElement();
-    }
-  });
-};
-
 export default class BoardController {
   constructor(container) {
     this._sortComponent = new SortComponent();
