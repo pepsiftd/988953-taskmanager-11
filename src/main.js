@@ -1,65 +1,13 @@
 import SiteMenuComponent from "@/components/site-menu.js";
 import FiltersComponent from "@/components/filters.js";
 import BoardComponent from "@/components/board.js";
-import TaskComponent from "@/components/task.js";
-import TaskEditComponent from "@/components/task-edit.js";
-import TasksComponent from "@/components/tasks.js";
-import LoadMoreComponent from "@/components/load-more-button.js";
-import SortComponent from "@/components/sorting.js";
+import BoardController from "@/controllers/board.js";
 import {generateFilters} from "@/components/mock/filters.js";
 import {generateTasks} from "@/components/mock/tasks.js";
-import {render, replace, RenderPosition} from "@/utils/render.js";
+import {render, RenderPosition} from "@/utils/render.js";
 
 const TASK_COUNT = 22;
-const SHOWING_TASKS_COUNT_ON_START = 8;
-const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 
-const renderTask = (taskListElement, task) => {
-  const editButtonClickHandler = () => {
-    replace(taskEditComponent, taskComponent);
-  };
-
-  const editFormSubmitHandler = () => {
-    replace(taskComponent, taskEditComponent);
-  };
-
-  const taskComponent = new TaskComponent(task);
-  taskComponent.setEditButtonClickHandler(editButtonClickHandler);
-
-  const taskEditComponent = new TaskEditComponent(task);
-  taskEditComponent.setSubmitHandler(editFormSubmitHandler);
-
-  render(taskListElement, taskComponent, RenderPosition.BEFOREEND);
-};
-
-const renderBoard = (boardComponent, tasks) => {
-  render(boardComponent.getElement(), new SortComponent(), RenderPosition.BEFOREEND);
-  const tasksContainerComponent = new TasksComponent();
-  render(boardComponent.getElement(), tasksContainerComponent, RenderPosition.BEFOREEND);
-
-  let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
-
-  //  задачи
-  tasks.slice(0, showingTasksCount)
-    .forEach((task) => renderTask(tasksContainerComponent.getElement(), task));
-
-  //  кнопка Load More
-  const loadMoreButtonComponent = new LoadMoreComponent();
-  render(boardComponent.getElement(), loadMoreButtonComponent, RenderPosition.BEFOREEND);
-
-  //     нажатие на кнопку Load More
-  loadMoreButtonComponent.setClickHandler(() => {
-    const prevTasksCount = showingTasksCount;
-    showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
-
-    tasks.slice(prevTasksCount, showingTasksCount)
-      .forEach((task) => renderTask(tasksContainerComponent.getElement(), task));
-
-    if (showingTasksCount >= tasks.length) {
-      loadMoreButtonComponent.removeElement();
-    }
-  });
-};
 
 // шапка
 //   главное меню
@@ -78,4 +26,5 @@ render(siteMainElement, boardComponent, RenderPosition.BEFOREEND);
 
 const tasks = generateTasks(TASK_COUNT);
 
-renderBoard(boardComponent, tasks);
+const boardController = new BoardController(boardComponent);
+boardController.render(tasks);
