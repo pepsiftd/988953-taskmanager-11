@@ -1,0 +1,64 @@
+import TaskComponent from "@/components/task.js";
+import TaskEditComponent from "@/components/task-edit.js";
+import TasksComponent from "@/components/tasks.js";
+import LoadMoreComponent from "@/components/load-more-button.js";
+import SortComponent from "@/components/sorting.js";
+import {render, replace, RenderPosition} from "@/utils/render.js";
+
+const SHOWING_TASKS_COUNT_ON_START = 8;
+const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
+
+const renderTask = (taskListElement, task) => {
+  const editButtonClickHandler = () => {
+    replace(taskEditComponent, taskComponent);
+  };
+
+  const editFormSubmitHandler = () => {
+    replace(taskComponent, taskEditComponent);
+  };
+
+  const taskComponent = new TaskComponent(task);
+  taskComponent.setEditButtonClickHandler(editButtonClickHandler);
+
+  const taskEditComponent = new TaskEditComponent(task);
+  taskEditComponent.setSubmitHandler(editFormSubmitHandler);
+
+  render(taskListElement, taskComponent, RenderPosition.BEFOREEND);
+};
+
+export default class BoardController {
+  constructor(container) {
+    this._sortComponent = new SortComponent();
+    this._tasksContainerComponent = new TasksComponent();
+    this._loadMoreButtonComponent = new LoadMoreComponent();
+
+    this._container = container;
+  }
+
+  render(tasks) {
+    render(this._container.getElement(), this._sortComponent, RenderPosition.BEFOREEND);
+    render(this._container.getElement(), this._tasksContainerComponent, RenderPosition.BEFOREEND);
+
+    let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
+
+    //  задачи
+    tasks.slice(0, showingTasksCount)
+      .forEach((task) => renderTask(this._tasksContainerComponent.getElement(), task));
+
+    //  кнопка Load More
+    render(this._container.getElement(), this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
+
+    //     нажатие на кнопку Load More
+    this._loadMoreButtonComponent.setClickHandler(() => {
+      const prevTasksCount = showingTasksCount;
+      showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
+
+      tasks.slice(prevTasksCount, showingTasksCount)
+        .forEach((task) => renderTask(this._tasksContainerComponent.getElement(), task));
+
+      if (showingTasksCount >= tasks.length) {
+        this._loadMoreButtonComponent.removeElement();
+      }
+    });
+  }
+}
