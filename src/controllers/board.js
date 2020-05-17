@@ -7,6 +7,15 @@ import {render, RenderPosition} from "@/utils/render.js";
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 
+const renderTasks = (taskListElement, tasks) => {
+  return tasks.map((task) => {
+    const newTaskController = new TaskController(taskListElement);
+
+    newTaskController.render(task);
+    return newTaskController;
+  });
+};
+
 export default class BoardController {
   constructor(container) {
     this._tasks = [];
@@ -31,13 +40,8 @@ export default class BoardController {
       const prevTasksCount = this._showingTasksCount;
       this._showingTasksCount += SHOWING_TASKS_COUNT_BY_BUTTON;
 
-      this._tasks.slice(prevTasksCount, this._showingTasksCount)
-        .forEach((task) => {
-          const newTaskController = new TaskController(this._tasksContainer);
-          this._showedTaskControllers.push(newTaskController);
-
-          newTaskController.render(task);
-        });
+      const newTasks = renderTasks(this._tasksContainer, this._tasks.slice(prevTasksCount, this._showingTasksCount));
+      this._showedTaskControllers = this._showedTaskControllers.concat(newTasks);
 
       if (this._showingTasksCount >= this._tasks.length) {
         this._loadMoreButtonComponent.removeElement();
@@ -50,13 +54,8 @@ export default class BoardController {
     render(this._container.getElement(), this._sortComponent, RenderPosition.BEFOREEND);
     render(this._container.getElement(), this._tasksContainerComponent, RenderPosition.BEFOREEND);
 
-    //  задачи
-    tasks.slice(0, this._showingTasksCount).forEach((task) => {
-      const newTaskController = new TaskController(this._tasksContainer);
-      this._showedTaskControllers.push(newTaskController);
-
-      newTaskController.render(task);
-    });
+    const newTasks = renderTasks(this._tasksContainer, this._tasks.slice(0, this._showingTasksCount));
+    this._showedTaskControllers = this._showedTaskControllers.concat(newTasks);
 
     this._renderLoadMoreButton();
   }
