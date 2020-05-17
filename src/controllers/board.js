@@ -7,9 +7,9 @@ import {render, RenderPosition} from "@/utils/render.js";
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 
-const renderTasks = (taskListElement, tasks) => {
+const renderTasks = (taskListElement, tasks, onDataChange) => {
   return tasks.map((task) => {
-    const newTaskController = new TaskController(taskListElement);
+    const newTaskController = new TaskController(taskListElement, onDataChange);
 
     newTaskController.render(task);
     return newTaskController;
@@ -24,9 +24,21 @@ export default class BoardController {
     this._loadMoreButtonComponent = new LoadMoreComponent();
     this._showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
     this._showedTaskControllers = [];
+    this._onDataChange = this._onDataChange.bind(this);
 
     this._container = container;
     this._tasksContainer = this._tasksContainerComponent.getElement();
+  }
+
+  _onDataChange(taskController, oldData, newData) {
+    const index = this._tasks.findIndex((it) => it === oldData);
+
+    if (index === -1) {
+      return;
+    }
+
+    this._tasks = [].concat(this._tasks.slice(0, index), newData, this._tasks.slice(index + 1));
+    taskController.render(this._tasks[index]);
   }
 
   _renderLoadMoreButton() {
@@ -40,7 +52,7 @@ export default class BoardController {
       const prevTasksCount = this._showingTasksCount;
       this._showingTasksCount += SHOWING_TASKS_COUNT_BY_BUTTON;
 
-      const newTasks = renderTasks(this._tasksContainer, this._tasks.slice(prevTasksCount, this._showingTasksCount));
+      const newTasks = renderTasks(this._tasksContainer, this._tasks.slice(prevTasksCount, this._showingTasksCount), this._onDataChange);
       this._showedTaskControllers = this._showedTaskControllers.concat(newTasks);
 
       if (this._showingTasksCount >= this._tasks.length) {
@@ -54,7 +66,7 @@ export default class BoardController {
     render(this._container.getElement(), this._sortComponent, RenderPosition.BEFOREEND);
     render(this._container.getElement(), this._tasksContainerComponent, RenderPosition.BEFOREEND);
 
-    const newTasks = renderTasks(this._tasksContainer, this._tasks.slice(0, this._showingTasksCount));
+    const newTasks = renderTasks(this._tasksContainer, this._tasks.slice(0, this._showingTasksCount), this._onDataChange);
     this._showedTaskControllers = this._showedTaskControllers.concat(newTasks);
 
     this._renderLoadMoreButton();
