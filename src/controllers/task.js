@@ -12,6 +12,7 @@ export default class TaskController {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._mode = Mode.DEFAULT;
 
     this._taskComponent = null;
     this._taskEditComponent = null;
@@ -64,12 +65,13 @@ export default class TaskController {
   }
 
   _replaceTaskWithEdit() {
+    this._onViewChange();
     replace(this._taskEditComponent, this._taskComponent);
     this._mode = Mode.EDIT;
   }
 
   _replaceEditWithTask() {
-    this._onViewChange();
+    this._taskEditComponent.reset();
     replace(this._taskComponent, this._taskEditComponent);
     this._mode = Mode.DEFAULT;
   }
