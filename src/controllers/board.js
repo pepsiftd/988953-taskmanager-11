@@ -61,6 +61,7 @@ export default class BoardController {
       this._showedTaskControllers = this._showedTaskControllers.concat(newTasks);
 
       if (this._showingTasksCount >= this._tasks.length) {
+        this._loadMoreButtonComponent.getElement().remove();
         this._loadMoreButtonComponent.removeElement();
       }
     });
