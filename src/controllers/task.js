@@ -2,10 +2,16 @@ import TaskComponent from "@/components/task.js";
 import TaskEditComponent from "@/components/task-edit.js";
 import {render, replace, RenderPosition} from "@/utils/render.js";
 
+const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
+};
+
 export default class TaskController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
 
     this._taskComponent = null;
     this._taskEditComponent = null;
@@ -51,11 +57,20 @@ export default class TaskController {
     }
   }
 
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceEditWithTask();
+    }
+  }
+
   _replaceTaskWithEdit() {
     replace(this._taskEditComponent, this._taskComponent);
+    this._mode = Mode.EDIT;
   }
 
   _replaceEditWithTask() {
+    this._onViewChange();
     replace(this._taskComponent, this._taskEditComponent);
+    this._mode = Mode.DEFAULT;
   }
 }
