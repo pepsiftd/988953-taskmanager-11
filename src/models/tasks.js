@@ -1,6 +1,8 @@
 export default class Tasks {
   constructor() {
     this._tasks = [];
+
+    this._dataChangeHandlers = [];
   }
 
   getTasks() {
@@ -21,5 +23,13 @@ export default class Tasks {
     this._tasks = [].concat(this._tasks.slice(0, index), newTask, this._tasks.slice(index + 1));
 
     return true;
+  }
+
+  setDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
+  }
+
+  _callHandlers(handlers) {
+    handlers.forEach((handler) => handler());
   }
 }

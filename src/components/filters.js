@@ -2,6 +2,10 @@ import AbstractComponent from '@/components/abstract-component';
 
 const CHECKED_FILTER_INDEX = 0;
 
+const getFilterNameById = (id) => {
+  return id.substring(FILTER_ID_PREFIX.length);
+};
+
 const createFilterMarkup = (filter, isChecked) => {
   const {name, count} = filter;
   return (
@@ -36,5 +40,12 @@ export default class Filters extends AbstractComponent {
 
   getTemplate() {
     return createFiltersTemplate(this._filters);
+  }
+
+  setFilterChangeHandler(handler) {
+    this.getElement().addEventListener(`change`, (evt) => {
+      const filterName = getFilterNameById(evt.target.id);
+      handler(filterName);
+    });
   }
 }
