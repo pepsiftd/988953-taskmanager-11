@@ -33,3 +33,8 @@ export const replace = (newComponent, oldComponent) => {
     container.replaceChild(newElement, oldElement);
   }
 };
+
+export const remove = (component) => {
+  component.getElement().remove();
+  component.removeElement();
+};
