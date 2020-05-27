@@ -1,7 +1,7 @@
 import TasksComponent from "@/components/tasks.js";
 import LoadMoreComponent from "@/components/load-more-button.js";
 import SortComponent from "@/components/sorting.js";
-import TaskController from "@/controllers/task.js";
+import TaskController, {Mode as TaskControllerMode, EmptyTask} from "@/controllers/task.js";
 import {render, RenderPosition} from "@/utils/render.js";
 
 const SHOWING_TASKS_COUNT_ON_START = 8;
@@ -11,7 +11,7 @@ const renderTasks = (taskListElement, tasks, onDataChange, onViewChange) => {
   return tasks.map((task) => {
     const newTaskController = new TaskController(taskListElement, onDataChange, onViewChange);
 
-    newTaskController.render(task);
+    newTaskController.render(task, TaskControllerMode.DEFAULT);
     return newTaskController;
   });
 };
@@ -35,10 +35,34 @@ export default class BoardController {
   }
 
   _onDataChange(taskController, oldData, newData) {
-    const isSuccess = this._tasksModel.updateTask(oldData.id, newData);
+    if (oldData === EmptyTask) {
+      this._creatingTask = null;
+      if (newData === null) {
+        taskController.destroy();
+        this._updateTasks(this._showingTasksCount);
+      } else {
+        this._tasksModel.addTask(newData);
+        taskController.render(newData, TaskControllerMode.DEFAULT);
 
-    if (isSuccess) {
-      taskController.render(newData);
+        if (this._showingTasksCount % SHOWING_TASKS_COUNT_BY_BUTTON === 0) {
+          const destroyedTask = this._showedTaskControllers.pop();
+          destroyedTask.destroy();
+        }
+
+        this._showedTaskControllers = [].concat(taskController, this._showedTaskControllers);
+        this._showingTasksCount = this._showedTaskControllers.length;
+
+        this._renderLoadMoreButton();
+      }
+    } else if (newData === null) {
+      this._tasksModel.removeTask(oldData.id);
+      this._updateTasks(this._showingTasksCount);
+    } else {
+      const isSuccess = this._tasksModel.updateTask(oldData.id, newData);
+
+      if (isSuccess) {
+        taskController.render(newData, TaskControllerMode.DEFAULT);
+      }
     }
   }
 

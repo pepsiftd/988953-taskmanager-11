@@ -2,6 +2,24 @@ import {MONTH_NAMES, DAYS, COLORS} from "@/const.js";
 import {formatTime} from "@/utils/common.js";
 import AbstractSmartComponent from '@/components/abstract-smart-component';
 
+const parseFormData = (formData) => {
+  const repeatingDays = DAYS.reduce((acc, day) => {
+    acc[day] = false;
+    return acc;
+  }, {});
+  const date = formData.get(`date`);
+
+  return {
+    description: formData.get(`text`),
+    color: formData.get(`color`),
+    dueDate: date ? new Date(date) : null,
+    repeatingDays: formData.getAll(`repeat`).reduce((acc, it) => {
+      acc[it] = true;
+      return acc;
+    }, repeatingDays),
+  };
+};
+
 const createColorsMarkup = (colors, currentColor) => {
   return colors
     .map((color, index) => {
@@ -142,6 +160,8 @@ export default class TaskEdit extends AbstractSmartComponent {
     super();
     this._task = task;
     this._submitHandler = null;
+    this._deleteButtonClickHandler = null;
+
     this._isDateShowing = !!task.dueDate;
     this._isRepeatingTask = Object.values(task.repeatingDays);
     this._activeRepeatingDays = Object.assign({}, task.repeatingDays);
@@ -165,6 +185,7 @@ export default class TaskEdit extends AbstractSmartComponent {
 
   recoverListeners() {
     this.setSubmitHandler(this._submitHandler);
+    this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
     this._subscribeOnEvents();
   }
 
@@ -176,9 +197,23 @@ export default class TaskEdit extends AbstractSmartComponent {
     });
   }
 
+  getData() {
+    const form = this.getElement().querySelector(`.card__form`);
+    const formData = new FormData(form);
+
+    return parseFormData(formData);
+  }
+
   setSubmitHandler(handler) {
     this._submitHandler = handler;
     this.getElement().querySelector(`form`).addEventListener(`submit`, handler);
+  }
+
+  setDeleteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.card__delete`)
+      .addEventListener(`click`, handler);
+
+    this._deleteButtonClickHandler = handler;
   }
 
   _subscribeOnEvents() {

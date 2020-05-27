@@ -2,10 +2,12 @@ import TaskComponent from "@/components/task.js";
 import TaskEditComponent from "@/components/task-edit.js";
 import {remove, render, replace, RenderPosition} from "@/utils/render.js";
 
-const Mode = {
+export const Mode = {
   DEFAULT: `default`,
   EDIT: `edit`,
 };
+
+export const EmptyTask = {};
 
 export default class TaskController {
   constructor(container, onDataChange, onViewChange) {
@@ -18,7 +20,9 @@ export default class TaskController {
     this._taskEditComponent = null;
   }
 
-  render(task) {
+  render(task, mode) {
+    this._mode = mode;
+
     const oldTaskComponent = this._taskComponent;
     const oldTaskEditComponent = this._taskEditComponent;
     this._taskComponent = new TaskComponent(task);
@@ -30,7 +34,8 @@ export default class TaskController {
 
     const editFormSubmitHandler = (evt) => {
       evt.preventDefault();
-      this._replaceEditWithTask();
+      const data = this._taskEditComponent.getData();
+      this._onDataChange(this, task, data);
     };
 
     const archiveButtonClickHandler = () => {
@@ -49,10 +54,12 @@ export default class TaskController {
     this._taskEditComponent.setSubmitHandler(editFormSubmitHandler);
     this._taskComponent.setArchiveButtonClickHandler(archiveButtonClickHandler);
     this._taskComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);
+    this._taskEditComponent.setDeleteButtonClickHandler(() => this._onDataChange(this, task, null));
 
     if (oldTaskComponent && oldTaskEditComponent) {
       replace(this._taskComponent, oldTaskComponent);
       replace(this._taskEditComponent, oldTaskEditComponent);
+      this._replaceEditWithTask();
     } else {
       render(this._container, this._taskComponent, RenderPosition.BEFOREEND);
     }
@@ -72,7 +79,11 @@ export default class TaskController {
 
   _replaceEditWithTask() {
     this._taskEditComponent.reset();
-    replace(this._taskComponent, this._taskEditComponent);
+
+    if (document.contains(this._taskEditComponent.getElement())) {
+      replace(this._taskComponent, this._taskEditComponent);
+    }
+
     this._mode = Mode.DEFAULT;
   }
 
