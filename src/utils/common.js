@@ -18,3 +18,15 @@ export const getRandomArrayItem = (array) => {
 export const getRandomIntegerNumber = (min, max) => {
   return min + Math.floor(Math.random() * (max - min));
 };
+
+export const isRepeating = (repeatingDays) => {
+  return Object.values(repeatingDays).some(Boolean);
+};
+
+export const isOverdueDate = (dueDate, date) => {
+  return dueDate < date && !isOneDay(date, dueDate);
+};
+
+export const isOneDay = (dateA, dateB) => {
+  return dateA.getDate() === dateB.getDate();
+};
