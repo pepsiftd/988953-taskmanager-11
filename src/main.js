@@ -30,4 +30,4 @@ const tasksModel = new TasksModel();
 tasksModel.setTasks(tasks);
 
 const boardController = new BoardController(boardComponent, tasksModel);
-boardController.render(tasks);
+boardController.render();
