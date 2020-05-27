@@ -52,21 +52,23 @@ export default class BoardController {
     render(this._container.getElement(), this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
     this._loadMoreButtonComponent.setClickHandler(() => {
+      this._loadMoreButtonComponent.getElement().remove();
+      this._loadMoreButtonComponent.removeElement();
+
       const prevTasksCount = this._showingTasksCount;
       this._showingTasksCount += SHOWING_TASKS_COUNT_BY_BUTTON;
 
       this._renderTasks(tasks.slice(prevTasksCount, this._showingTasksCount));
 
-      if (this._showingTasksCount >= tasks.length) {
-        this._loadMoreButtonComponent.getElement().remove();
-        this._loadMoreButtonComponent.removeElement();
+      if (this._showingTasksCount < tasks.length) {
+        this._renderLoadMoreButton();
       }
     });
   }
 
   _renderTasks(tasks) {
     const tasksContainer = this._tasksContainerComponent.getElement();
-    const newTasks = renderTasks(tasksContainer, tasks, this._onDataChange, this._onViewChange)
+    const newTasks = renderTasks(tasksContainer, tasks, this._onDataChange, this._onViewChange);
 
     this._showedTaskControllers = this._showedTaskControllers.concat(newTasks);
   }
