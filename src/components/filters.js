@@ -1,13 +1,13 @@
 import AbstractComponent from '@/components/abstract-component';
 
-const CHECKED_FILTER_INDEX = 0;
+const FILTER_ID_PREFIX = `filter__`;
 
 const getFilterNameById = (id) => {
   return id.substring(FILTER_ID_PREFIX.length);
 };
 
-const createFilterMarkup = (filter, isChecked) => {
-  const {name, count} = filter;
+const createFilterMarkup = (filter) => {
+  const {name, count, isChecked} = filter;
   return (
     `<input
       type="radio"
@@ -23,7 +23,7 @@ const createFilterMarkup = (filter, isChecked) => {
 };
 
 const createFiltersTemplate = (filters) => {
-  const filtersMarkup = filters.map((it, i) => createFilterMarkup(it, i === CHECKED_FILTER_INDEX)).join(`\n`);
+  const filtersMarkup = filters.map((it) => createFilterMarkup(it)).join(`\n`);
 
   return (
     `<section class="main__filter filter container">

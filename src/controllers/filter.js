@@ -24,8 +24,8 @@ export default class FilterController {
     const filters = Object.values(FilterType).map((filterType) => {
       return {
         name: filterType,
-        count: getTasksByFilter(allTasks, filterType),
-        checked: filterType === this._activeFilterType,
+        count: getTasksByFilter(allTasks, filterType).length,
+        isChecked: filterType === this._activeFilterType,
       };
     });
 
